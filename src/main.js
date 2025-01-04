@@ -13,6 +13,8 @@ import router from './router'
 
 // 注册svg
 import '@/icons'
+// 引入 Permission.js
+import '@/permission'
 
 Vue.use(ElementUI)
 
