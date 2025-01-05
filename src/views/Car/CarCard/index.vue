@@ -3,14 +3,14 @@
     <!-- 搜索区域 -->
     <div class="search-container">
       <span class="search-label">车牌号码：</span>
-      <el-input clearable placeholder="请输入内容" class="search-main" />
+      <el-input v-model="params.carNumber" clearable placeholder="请输入内容" class="search-main" />
       <span class="search-label">车主姓名：</span>
-      <el-input clearable placeholder="请输入内容" class="search-main" />
+      <el-input v-model="params.personName" clearable placeholder="请输入内容" class="search-main" />
       <span class="search-label">状态：</span>
-      <el-select>
-        <el-option v-for="item in []" :key="item.id" />
+      <el-select v-model="params.cardStatus">
+        <el-option v-for="item in optionList" :key="item.value" :label="item.name" :value="item.id" />
       </el-select>
-      <el-button type="primary" class="search-btn">查询</el-button>
+      <el-button type="primary" class="search-btn" @click="searchBtn">查询</el-button>
     </div>
     <!-- 新增删除操作区域 -->
     <div class="create-container">
@@ -20,7 +20,7 @@
     <!-- 表格区域 -->
     <div class="table">
       <el-table style="width: 100%" :data="cardList" stripe>
-        <el-table-column type="index" label="序号" />
+        <el-table-column type="index" :index="indexMethod" label="序号" />
         <el-table-column label="车主名称" prop="personName" />
         <el-table-column label="联系方式" prop="phoneNumber" />
         <el-table-column label="车牌号码" prop="carNumber" />
@@ -39,12 +39,13 @@
     </div>
     <div class="page-container">
       <el-pagination
-        layout="total, sizes, prev, pager, next"
-        :total="total"
+        :current-page="params.page"
+        :page-sizes="[2, 5, 6, 8]"
         :page-size="params.pageSize"
-        :page-sizes="[2, 5, 8]"
-        @current-change="currentChange"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
         @size-change="changeSize"
+        @current-change="currentChange"
       />
     </div>
     <!-- 添加楼宇 -->
@@ -90,6 +91,20 @@ export default {
         cardStatus: null
       },
       cardList: [],
+      optionList: [
+        {
+          id: null,
+          name: '全部'
+        },
+        {
+          id: 0,
+          name: '可用'
+        },
+        {
+          id: 1,
+          name: '已过期'
+        }
+      ],
       total: 1
     }
   },
@@ -97,6 +112,10 @@ export default {
     this.getCardList()
   },
   methods: {
+    indexMethod(index) {
+      // 当前页 - 1 乘以每页条数 + index + 1
+      return (this.params.page - 1) * this.params.pageSize + index + 1
+    },
     async getCardList() {
       const res = await getCardListAPI(this.params)
       console.log(res.data)
@@ -118,6 +137,12 @@ export default {
     },
     changeSize(pageSize) {
       this.params.pageSize = pageSize
+      this.params.page = 1
+
+      this.getCardList()
+    },
+    // 搜索功能实现
+    searchBtn() {
       this.params.page = 1
 
       this.getCardList()
