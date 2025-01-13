@@ -14,12 +14,16 @@
     </div>
     <!-- 新增删除操作区域 -->
     <div class="create-container">
-      <el-button type="primary">添加月卡</el-button>
-      <el-button>批量删除</el-button>
+      <el-button type="primary" @click="$router.push('/car/addmonthcard')">添加月卡</el-button>
+      <el-button @click="delsBtn">批量删除</el-button>
     </div>
     <!-- 表格区域 -->
     <div class="table">
-      <el-table style="width: 100%" :data="cardList" stripe>
+      <el-table style="width: 100%" :data="cardList" stripe @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55"
+        />
         <el-table-column type="index" :index="indexMethod" label="序号" />
         <el-table-column label="车主名称" prop="personName" />
         <el-table-column label="联系方式" prop="phoneNumber" />
@@ -31,8 +35,9 @@
           <template #default="scope">
             <el-button size="mini" type="text">续费</el-button>
             <el-button size="mini" type="text">查看</el-button>
-            <el-button size="mini" type="text">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="editBtn(scope.row.id)">编辑</el-button>
+            <el-button size="mini" type="text" @click="delBtn(scope.row.id)">删除</el-button>
+
           </template>
         </el-table-column>
       </el-table>
@@ -79,7 +84,7 @@
 </template>
 
 <script>
-import { getCardListAPI } from '@/api/card'
+import { getCardListAPI, delCardAPI } from '@/api/card'
 export default {
   data() {
     return {
@@ -91,6 +96,8 @@ export default {
         cardStatus: null
       },
       cardList: [],
+      // 选中的删除列表
+      selectionInfo: [],
       optionList: [
         {
           id: null,
@@ -105,17 +112,74 @@ export default {
           name: '已过期'
         }
       ],
-      total: 1
+      total: 1,
+      ids: ''
     }
   },
   created() {
     this.getCardList()
   },
   methods: {
+    // 批量删除
+    delsBtn() {
+      if (this.selectionInfo.length <= 0) {
+        this.$message.warning('请选择要删除的项')
+        return
+      }
+      this.ids = this.selectionInfo.map(item => item.id).join(',')
+      // console.log(this.ids)
+      this.$confirm('此操作将永久删除选中项, 是否继续?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await delCardAPI(this.ids)
+        this.$message.success('删除成功')
+        if (this.cardList.length === 1 && this.params.page > 1) {
+          this.params.page--
+        }
+        // this.params.page = 1
+        this.getCardList()
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
+    handleSelectionChange(val) {
+      console.log(val)
+      this.selectionInfo = val
+    },
     indexMethod(index) {
       // 当前页 - 1 乘以每页条数 + index + 1
       return (this.params.page - 1) * this.params.pageSize + index + 1
     },
+    // 编辑按钮
+    editBtn(id) {
+      this.$router.push({
+        path: '/car/addmonthcard',
+        query: {
+          id
+        }
+      })
+    },
+    // 删除单行
+    delBtn(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await delCardAPI(id)
+        this.$message.success('删除成功')
+        if (this.cardList.length === 1 && this.params.page > 1) {
+          this.params.page--
+        }
+        // this.params.page = 1
+        this.getCardList()
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
+
     async getCardList() {
       const res = await getCardListAPI(this.params)
       console.log(res.data)

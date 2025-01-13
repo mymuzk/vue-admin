@@ -28,6 +28,10 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   response => {
+    if (response.data.code === 50000) {
+      Message.error(response.data.msg)
+      return Promise.reject(response.data)
+    }
     return response.data
   },
   error => {

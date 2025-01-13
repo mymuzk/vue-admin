@@ -44,7 +44,18 @@ export const routes = [
       component: () => import('@/views/Park/Enterprise/index')
     }]
   },
-
+  {
+    path: '/park/enterprise/detail/:id',
+    component: () => import('@/views/Park/Enterprise/Detail.vue')
+  },
+  {
+    path: '/park/enterprise/add',
+    component: () => import('@/views/Park/Enterprise/addEnterprise.vue')
+  },
+  {
+    path: '/car/addmonthcard',
+    component: () => import('@/views/Car/CarCard/addMonthCard.vue')
+  },
   {
     path: '/parking',
     component: Layout,
