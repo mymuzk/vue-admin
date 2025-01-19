@@ -51,3 +51,26 @@ export function createRoleUserAPI(data) {
     data
   })
 }
+
+/**
+ * 更改角色
+ * @returns
+ */
+export function updateRoleAPI(data) {
+  return request({
+    url: `/park/sys/role`,
+    method: 'PUT',
+    data
+  })
+}
+
+/**
+ * 删除角色
+ * @returns
+ */
+export function delRoleUserAPI(roleId) {
+  return request({
+    url: `/park/sys/role/${roleId}`,
+    method: 'DELETE'
+  })
+}

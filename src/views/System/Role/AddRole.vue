@@ -4,7 +4,7 @@
       <div class="left">
         <span class="arrow" @click="$router.back()"><i class="el-icon-arrow-left" />返回</span>
         <span>|</span>
-        <span>添加角色</span>
+        <span>{{ id? '编辑角色':'添加角色' }}</span>
       </div>
       <div class="right">
         黑马程序员
@@ -76,14 +76,14 @@
       <div class="btn-container">
         <el-button :disabled="active === 1" @click="prevBtn">上一步</el-button>
         <el-button v-if="active !== 3" :disabled="active === 3" type="primary" @click="nextBtn">下一步</el-button>
-        <el-button v-else type="primary" @click="submitBtn">确认提交</el-button>
+        <el-button v-else type="primary" @click="submitBtn">{{ id ? '编辑修改':'确认提交' }}</el-button>
       </div>
     </footer>
   </div>
 </template>
 
 <script>
-import { getTreeListAPI, createRoleUserAPI } from '@/api/system'
+import { getTreeListAPI, createRoleUserAPI, getRoleDetailAPI, updateRoleAPI } from '@/api/system'
 export default {
   data() {
     return {
@@ -110,10 +110,26 @@ export default {
       }
     }
   },
+  computed: {
+    id() {
+      return this.$route.query.id
+    }
+  },
   mounted() {
     this.getTreeList()
+    if (this.id) {
+      this.getRoleDetail()
+    }
   },
   methods: {
+    async getRoleDetail() {
+      const res = await getRoleDetailAPI(this.id)
+      console.log(res)
+      this.roleForm = res.data
+      this.$refs.tree.forEach((tree, index) => {
+        tree.setCheckedKeys(this.roleForm.perms[index])
+      })
+    },
     async getTreeList() {
       const res = await getTreeListAPI()
       console.log('tree', res)
@@ -125,8 +141,14 @@ export default {
       this.active--
     },
     async submitBtn() {
-      await createRoleUserAPI(this.roleForm)
-      this.$message.success('添加角色成功')
+      if (this.id) {
+        delete this.roleForm.userTotal
+        await updateRoleAPI(this.roleForm)
+        this.$message.success('编辑角色成功')
+      } else {
+        await createRoleUserAPI(this.roleForm)
+        this.$message.success('添加角色成功')
+      }
       this.$router.back()
     },
     nextBtn() {
