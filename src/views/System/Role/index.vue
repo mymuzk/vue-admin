@@ -18,13 +18,18 @@
               <svg-icon icon-class="more" />
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="editRoleBtn(item.roleId)">编辑角色</el-dropdown-item>
-              <el-dropdown-item @click.native="delRoleBtn(item.roleId)">删除</el-dropdown-item>
+              <el-dropdown-item v-perm="'sys:role:add_edit'" @click.native="editRoleBtn(item.roleId)">编辑角色</el-dropdown-item>
+              <el-dropdown-item v-perm="'sys:role:remove'" @click.native="delRoleBtn(item.roleId)">删除</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
       </div>
-      <el-button class="addBtn" size="mini" @click="$router.push('/sys/role/add')">添加角色</el-button>
+      <el-button
+        v-perm="'sys:role:add_edit'"
+        class="addBtn"
+        size="mini"
+        @click="$router.push('/sys/role/add')"
+      >添加角色</el-button>
     </div>
 
     <div class="right-wrapper">

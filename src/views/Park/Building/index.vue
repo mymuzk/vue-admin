@@ -7,7 +7,7 @@
       <el-button type="primary" @click="getBuildingList()">查询</el-button>
     </div>
     <div class="create-container">
-      <el-button type="primary" @click="addBuilding">添加楼宇</el-button>
+      <el-button v-perm="'park:building:add_edit'" type="primary" @click="addBuilding">添加楼宇</el-button>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -49,11 +49,13 @@
         >
           <template #default="scope">
             <el-button
+              v-perm="'park:building:add_edit'"
               size="mini"
               type="text"
               @click="editBuilding(scope.row.id)"
             >编辑</el-button>
             <el-button
+              v-perm="'park:building:remove'"
               size="mini"
               type="text"
               @click="delBuilding(scope.row.id, scope.row.status)"

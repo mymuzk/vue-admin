@@ -7,7 +7,7 @@
       <el-button type="primary" @click="searchBtn">查询</el-button>
     </div>
     <div class="create-container">
-      <el-button type="primary" @click="$router.push('/park/enterprise/add')">添加企业</el-button>
+      <el-button v-perm="'park:enterprise:add_edit'" type="primary" @click="$router.push('/park/enterprise/add')">添加企业</el-button>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -30,8 +30,8 @@
               </el-table-column>
               <el-table-column label="操作" width="180">
                 <template #default="rentObj">
-                  <el-button size="mini" type="text" :disabled="rentObj.row.status === 3" @click="outRent('put', rentObj.row.id)">退租</el-button>
-                  <el-button size="mini" type="text" :disabled="rentObj.row.status !== 3" @click="outRent('delete',rentObj.row.id)">删除</el-button>
+                  <el-button v-perm="'park:rent:add_surrender'" size="mini" type="text" :disabled="rentObj.row.status === 3" @click="outRent('put', rentObj.row.id)">退租</el-button>
+                  <el-button v-perm="'park:rent:remove'" size="mini" type="text" :disabled="rentObj.row.status !== 3" @click="outRent('delete',rentObj.row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -46,10 +46,10 @@
         />
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="addContract(scope.row.id)">添加合同</el-button>
-            <el-button size="mini" type="text" @click="viewInfo(scope.row.id)">查看</el-button>
-            <el-button size="mini" type="text" @click="editBtn(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="text" @click="delBtn(scope.row.id)">删除</el-button>
+            <el-button v-perm="'park:rent:add_surrender'" size="mini" type="text" @click="addContract(scope.row.id)">添加合同</el-button>
+            <el-button v-perm="'park:enterprise:query'" size="mini" type="text" @click="viewInfo(scope.row.id)">查看</el-button>
+            <el-button v-perm="'park:enterprise:add_edit'" size="mini" type="text" @click="editBtn(scope.row.id)">编辑</el-button>
+            <el-button v-perm="'park:enterprise:remove'" size="mini" type="text" @click="delBtn(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

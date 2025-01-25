@@ -7,7 +7,7 @@
       <el-button type="primary" @click="searchBtn">查询</el-button>
     </div>
     <div class="create-container">
-      <el-button type="primary" @click="addEmployee">添加员工</el-button>
+      <el-button v-perm="'sys:user:add_edit'" type="primary" @click="addEmployee">添加员工</el-button>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -25,9 +25,9 @@
         <el-table-column label="添加时间" prop="createTime" />
         <el-table-column label="操作" fixed="right" width="150">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="updateUserData(scope.row.id, 'edit')">编辑</el-button>
-            <el-button size="mini" type="text" @click="updateUserData(scope.row.id, 'del')">删除</el-button>
-            <el-button size="mini" type="text" @click="updateUserData(scope.row.id, 'reset')">重置密码</el-button>
+            <el-button v-perm="'sys:user:add_edit'" size="mini" type="text" @click="updateUserData(scope.row.id, 'edit')">编辑</el-button>
+            <el-button v-perm="'sys:user:remove'" size="mini" type="text" @click="updateUserData(scope.row.id, 'del')">删除</el-button>
+            <el-button v-perm="'sys:user:resetPwd'" size="mini" type="text" @click="updateUserData(scope.row.id, 'reset')">重置密码</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -217,7 +217,7 @@ export default {
           await resetUserPwdAPI(id)
           this.$message.success('重置该员工密码为：123456')
         }).catch(() => {
-          this.$message.success('已取消操作')
+          this.$message.info('已取消操作')
         })
       }
     },
