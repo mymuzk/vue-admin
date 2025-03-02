@@ -1,6 +1,8 @@
 <template>
   <div class="navbar">
     <div class="right-menu">
+      <el-button type="primary" size="small" style="margin-right: 8px;"
+        @click="$router.push('/bigscreen')">跳转到可视化大屏</el-button>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <!-- 用户名称 -->
@@ -42,6 +44,7 @@ export default {
   line-height: 64px;
   overflow: hidden;
   position: relative;
+
   .app-breadcrumb {
     display: inline-block;
     font-size: 18px;
@@ -113,10 +116,12 @@ export default {
 
     .avatar-container {
       margin-right: 30px;
+
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-        .name{
+
+        .name {
           font-weight: 600;
           cursor: pointer;
         }

@@ -18,13 +18,15 @@ import App from './App'
 import store from './store'
 
 import router from './router'
+
+// 启动微前端配置
+import '@/registerMicroApp'
 // 引入全局指令
 import '@/directive'
 // 注册svg
 import '@/icons'
 // 引入 Permission.js
 import '@/permission'
-
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false

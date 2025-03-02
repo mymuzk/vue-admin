@@ -2,10 +2,12 @@ import axios from 'axios'
 import store from '@/store'
 import router from '@/router'
 import { Message } from 'element-ui'
-
+console.log(process.env.VUE_APP_BASE_URL)
 const service = axios.create({
-  baseURL: 'https://api-hmzs.itheima.net/v1',
-  timeout: 5000 // request timeout
+  // baseURL: process.env.VUE_APP_BASE_API,
+  // baseURL: 'https://api-hmzs.itheima.net/v1',
+  baseURL: process.env.VUE_APP_BASE_URL,
+  timeout: 9000 // request timeout
 })
 
 // 请求拦截器
